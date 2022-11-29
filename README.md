@@ -1,6 +1,6 @@
 # YMMP-Proto
 
-Unofficial Protocol Buffers definition of Yukkuri Movie Maker 4 Project File (WIP)
+Unofficial Protocol Buffers definition of [Yukkuri Movie Maker 4](https://manjubox.net/ymm4/) Project File (WIP)
 
 ## Usage
 
