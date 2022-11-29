@@ -1,0 +1,385 @@
+syntax = "proto3";
+
+message ymmp {
+  string                  FilePath        = 1;
+  TimeLine                TimeLine        = 2;
+  repeated Character      Characters      = 3;
+  repeated CollapsedGroup CollapsedGroups = 4;
+
+  message TimeLine {
+    VideoInfo     VideoInfo    = 1;
+    VerticalLine  VerticalLine = 2;
+    repeated Item Items        = 3;
+
+    message VideoInfo {
+      int32 FPS    = 1;
+      int32 Hz     = 2;
+      int32 Width  = 3;
+      int32 Height = 4;
+    }
+
+    message VerticalLine {
+      bool   IsEnabled  = 1;
+      int32  StartFrame = 2;
+      string LineType   = 3;  // TODO: enum
+      Line   Line       = 4;
+      int32  Group      = 5;
+
+      message Line {
+        string type = 1;  // originally '$type', TODO: enum?
+        int32  BPM  = 2;
+      }
+    }
+
+    message Item {
+      oneof value {
+        TachieItem     value = 1;
+        VoiceItem      value = 2;
+        ImageItem      value = 3;
+        TachieFaceItem value = 4;
+        TextItem       value = 5;
+      }
+
+      message TachieItem {
+        string          type                      =  1;  // originally '$type', TODO: enum
+        string          CharacterName             =  2;
+        TachieItemParam TachieItemParameter       =  3;
+        Easing          X                         =  4;
+        Easing          Y                         =  5;
+        Easing          Opacity                   =  6;
+        Easing          Zoom                      =  7;
+        Easing          Rotation                  =  8;
+        int32           FadeIn                    =  9;
+        int32           FadeOut                   = 10;
+        string          Blend                     = 11;  // TODO: enum
+        bool            IsInverted                = 12;
+        bool            IsAlwaysOnTop             = 13;
+        bool            IsClippingWithObjectAbove = 14;
+        repeated Effect VideoEffects              = 15;
+        int32           Group                     = 16;
+        int32           Frame                     = 17;
+        int32           Layer                     = 18;
+        int32           Length                    = 19;
+        int32           PlaybackRate              = 20;
+        string          ContentOffset             = 21;
+        bool            IsLocked                  = 22;
+        bool            IsHidden                  = 23;
+      }
+
+      message VoiceItem {
+        string          type                      =  1;  // originally '$type', TODO: enum
+        bool            IsWaveformEnabled         =  2;
+        string          CharacterName             =  3;
+        string          Serif                     =  4;
+        repeated Deco   Decorations               =  5;
+        string          Hatsuon                   =  6;
+        Pronounce       Pronounce                 =  7;
+        string          VoiceLength               =  8;
+        string          VoiceCache                =  9;
+        Easing          Volume                    = 10;
+        Easing          Pan                       = 11;
+        int32           PlaybackRate              = 12;
+        VoiceParameter  VoiceParameter            = 13;
+        string          ContentOffset             = 14;
+        int32           VoiceFadeIn               = 15;
+        int32           VoiceFadeOut              = 16;
+        bool            EchoIsEnabled             = 17;
+        float           EchoInterval              = 18;
+        float           EchoAttenuation           = 19;
+        string          JimakuVisibility          = 20;  // TODO: enum
+        Easing          X                         = 21;
+        Easing          Y                         = 22;
+        Easing          Opacity                   = 23;
+        Easing          Zoom                      = 24;
+        Easing          Rotation                  = 25;
+        int32           JimakuFadeIn              = 26;
+        int32           JimakuFadeOut             = 27;
+        string          Blend                     = 28;  // TODO: enum
+        bool            IsInverted                = 29;
+        bool            IsAlwaysOnTop             = 30;
+        bool            IsClippingWithObjectAbove = 31;
+        string          Font                      = 32;
+        Easing          FontSize                  = 33;
+        Easing          LineHeight2               = 34;
+        Easing          LetterSpacing2            = 35;
+        float           DisplayInterval           = 36;
+        repeated Effect JimakuVideoEffects        = 37;
+        TachieFaceParam TachieFaceParameter       = 38;
+        repeated Effect TachieFaceEffects         = 39;
+        int32           Group                     = 40;
+        int32           Frame                     = 41;
+        int32           Layer                     = 42;
+        int32           Length                    = 43;
+        bool            IsLocked                  = 44;
+        bool            IsHidden                  = 45;
+
+        message Pronounce {
+          string          type                      =  1;  // originally '$type', TODO: enum
+          AudioQuery      AudioQuery = 2;
+
+          message AudioQuery {
+            repeated AccentPhrase accent_phrases     =  1;
+            float                 speedScale         =  2;
+            float                 pitchScale         =  3;
+            float                 intonationScale    =  4;
+            float                 volumeScale        =  5;
+            float                 prePhonemeLength   =  6;
+            float                 postPhonemeLength  =  7;
+            int32                 outputSamplingRate =  8;
+            bool                  outputStereo       =  9;
+            string                kana               = 10;
+
+            message AccentPhrase {
+              repeated Mora moras            = 1;
+              int32         accent           = 2;
+              int32         pause_mora       = 3;  // TODO: unknown type
+              bool          is_interrogative = 4;
+
+              message Mora {
+                string text             = 1;
+                string consonant        = 2;
+                double consonant_length = 3;
+                string vowel            = 4;
+                double vowel_length     = 5;
+                double pitch            = 6;
+              }
+            }
+          }
+        }
+      }
+
+      message Deco {
+        float  Start         = 1;
+        float  Length        = 2;
+        bool   IsBold        = 3;
+        bool   IsItalic      = 4;
+        float  Scale         = 5;
+        string Font          = 6;
+        string Foreground    = 7;  // TODO: unknown type
+        bool   IsLineBreak   = 8;
+        bool   HasDecoration = 9;
+      }
+
+
+      message ImageItem {
+        string          type                      =  1;  // originally '$type', TODO: enum
+        string          FilePath                  =  2;
+        Easing          X                         =  4;
+        Easing          Y                         =  5;
+        Easing          Opacity                   =  6;
+        Easing          Zoom                      =  7;
+        Easing          Rotation                  =  8;
+        int32           FadeIn                    =  9;
+        int32           FadeOut                   = 10;
+        string          Blend                     = 11;  // TODO: enum
+        bool            IsInverted                = 12;
+        bool            IsAlwaysOnTop             = 13;
+        bool            IsClippingWithObjectAbove = 14;
+        repeated Effect VideoEffects              = 15;
+        int32           Group                     = 16;
+        int32           Frame                     = 17;
+        int32           Layer                     = 18;
+        int32           Length                    = 19;
+        int32           PlaybackRate              = 20;
+        string          ContentOffset             = 21;
+        bool            IsLocked                  = 22;
+        bool            IsHidden                  = 23;
+      }
+
+      message TachieFaceItem {
+        string          type                      =  1;  // originally '$type', TODO: enum
+        string          CharacterName             =  2;
+        TachieFaceParam TachieFaceParameter       =  3;
+        repeated Effect TachieFaceEffects         = 15;
+        int32           Group                     = 16;
+        int32           Frame                     = 17;
+        int32           Layer                     = 18;
+        int32           Length                    = 19;
+        int32           PlaybackRate              = 20;
+        string          ContentOffset             = 21;
+        bool            IsLocked                  = 22;
+        bool            IsHidden                  = 23;
+      }
+
+      message TextItem {
+        string          type                      =  1;  // originally '$type', TODO: enum
+        string          Text                      =  2;
+        repeated Deco   Decorations               =  3;
+        string          Font                      = 24;
+        Easing          FontSize                  = 25;
+        Easing          LineHeight2               = 26;
+        Easing          LetterSpacing2            = 27;
+        float           DisplayInterval           = 28;
+        string          BasePoint                 = 29;  // TODO: enum
+        string          FontColor                 = 30;
+        string          Style                     = 31;  // TODO: enum
+        string          StyleColor                = 32;
+        bool            Bold                      = 33;
+        bool            Italic                    = 34;
+        bool            IsDevidedPerCharacter     = 35;  // not typo
+        Easing          X                         =  4;
+        Easing          Y                         =  5;
+        Easing          Opacity                   =  6;
+        Easing          Zoom                      =  7;
+        Easing          Rotation                  =  8;
+        int32           FadeIn                    =  9;
+        int32           FadeOut                   = 10;
+        string          Blend                     = 11;  // TODO: enum
+        bool            IsInverted                = 12;
+        bool            IsAlwaysOnTop             = 13;
+        bool            IsClippingWithObjectAbove = 14;
+        repeated Effect VideoEffects              = 15;
+        int32           Group                     = 16;
+        int32           Frame                     = 17;
+        int32           Layer                     = 18;
+        int32           Length                    = 19;
+        int32           PlaybackRate              = 20;
+        string          ContentOffset             = 21;
+        bool            IsLocked                  = 22;
+        bool            IsHidden                  = 23;
+      }
+    }
+  }
+
+  message Character {
+    string          Name                             =  1;
+    string          GroupName                        =  2;
+    string          Color                            =  3;
+    int32           Layer                            =  4;
+    Voice           Voice                            =  5;
+    Easing          Volume                           =  6;
+    Easing          Pan                              =  7;
+    int32           PlaybackRate                     =  8;
+    VoiceParameter  VoiceParameter                   =  9;
+    float           AdditionalTime                   = 10;
+    int32           VoiceFadeIn                      = 11;  // TODO: enum?
+    int32           VoiceFadeOut                     = 12;  // TODO: enum?
+    bool            EchoIsEnabled                    = 13;
+    float           EchoInterval                     = 14;
+    float           EchoAttenuation                  = 15;
+    bool            CustomVoiceIsEnabled             = 16;
+    bool            CustomVoiceIncludeSubdirectories = 17;
+    string          CustomVoiceDirectory             = 18;
+    string          CustomVoiceFileName              = 19;
+    bool            IsJimakuVisible                  = 20;
+    bool            IsJimakuLocked                   = 21;
+    Easing          X                                = 22;
+    Easing          Y                                = 23;
+    Easing          Opacity                          = 24;
+    Easing          Zoom                             = 25;
+    Easing          Rotation                         = 26;
+    int32           JimakuFadeIn                     = 27;  // TODO: enum?
+    int32           JimakuFadeOut                    = 28;  // TODO: enum?
+    string          Blend                            = 29;  // TODO: enum
+    bool            IsInverted                       = 30;
+    bool            IsAlwaysOnTop                    = 31;
+    bool            IsClippingWithObjectAbove        = 32;
+    string          Font                             = 33;
+    Easing          FontSize                         = 34;
+    Easing          LineHeight2                      = 35;
+    Easing          LetterSpacing2                   = 36;
+    int32           DisplayInterval                  = 37;
+    string          BasePoint                        = 38;  // TODO: enum
+    string          FontColor                        = 39;
+    string          Style                            = 40;  // TODO: enum
+    string          StyleColor                       = 41;
+    bool            Bold                             = 42;
+    bool            Italic                           = 43;
+    bool            IsDevidedPerCharacter            = 44;  // not typo
+    repeated Effect JimakuVideoEffects               = 45;
+    string          TachieType                       = 46;
+    TachieParameter TachieCharacterParameter         = 47;
+    bool            IsTachieLocked                   = 48;
+    Easing          TachieX                          = 49;
+    Easing          TachieY                          = 50;
+    Easing          TachieOpacity                    = 51;
+    Easing          TachieZoom                       = 52;
+    Easing          TachieRotation                   = 53;
+    int32           TachieFadeIn                     = 54;
+    int32           TachieFadeOut                    = 55;
+    string          TachieBlend                      = 56;  // TODO: enum
+    bool            TachieIsInverted                 = 57;
+    bool            TachieIsAlwaysOnTop              = 58;
+    bool            TachieIsClippingWithObjectAbove  = 59;
+    TachieItemParam TachieDefaultItemParameter       = 60;
+    repeated Effect TachieItemVideoEffects           = 61;
+    TachieFaceParam TachieDefaultFaceParameter       = 62;
+    repeated Effect TachieDefaultFaceEffects         = 63;
+    string          AdditionalForegroundTemplateName = 64;
+    string          AdditionalBackgroundTemplateName = 65;
+
+    message Voice {
+      string API = 1;
+      string Arg = 2;
+    }
+
+    message VoiceParameter {
+      string type              = 1;  // originally '$type', TODO: enum?
+      int32  StyleID           = 2;
+      int32  Speed             = 3;
+      int32  Pitch             = 4;
+      int32  Intonation        = 5;
+      float  PrePhonemeLength  = 6;
+      float  PostPhonemeLength = 7;
+    }
+
+    message Effect {
+      // TODO
+    }
+
+    message TachieParameter {
+      string type             = 1;  // originally '$type', TODO: enum
+      string Directory        = 2;
+      int32  EyeBlinkStart    = 3;
+      int32  EyeBlinkInterval = 4;
+      int32  MouthSensitivity = 5;
+    }
+
+    message TachieItemParam {
+      string type                 =  1;  // originally '$type', TODO: enum?
+      bool   IsHiddenWhenNoSpeech =  2;
+      string Eyebrow              =  3;
+      string Eye                  =  4;
+      string Mouth                =  5;
+      string Hair                 =  6;
+      string Complexion           =  7;
+      string Body                 =  8;
+      string Back1                =  9;
+      string Back2                = 10;
+      string Back3                = 11;
+      string Etc1                 = 12;
+      string Etc2                 = 13;
+      string Etc3                 = 14;
+    }
+
+    message TachieFaceParam {
+      string type           =  1;  // originally '$type', TODO: enum?
+      string EyeAnimation   =  2;  // TODO: enum
+      string MouthAnimation =  3;  // TODO: enum
+      string Eyebrow        =  4;
+      string Eye            =  5;
+      string Mouth          =  6;
+      string Hair           =  7;
+      string Complexion     =  8;
+      string Body           =  9;
+      string Back1          = 10;
+      string Back2          = 11;
+      string Back3          = 12;
+      string Etc1           = 13;
+      string Etc2           = 14;
+      string Etc3           = 15;
+    }
+  }
+
+  message CollapsedGroup {
+    // TODO
+  }
+}
+
+message Easing {
+  float  From          = 1;
+  float  To            = 2;
+  string AnimationType = 3;  // TODO: enum
+  float  Span          = 4;
+}
+
